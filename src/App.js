@@ -179,12 +179,12 @@ function App() {
     try {
       const blogRef = doc(db, "articles", selectedBlog.articleId);
       await deleteDoc(blogRef);
-
       // Remove the deleted blog from the local state (blogs array)
       setBlogs((prevBlogs) =>
         prevBlogs.filter((blog) => blog.articleId !== selectedBlog.articleId)
       );
-      selectedBlog(null);
+      // selectedBlog(null);
+      setSelectedBlog(null);
 
       toast("🗑️ Blog entry deleted!", {
         position: "bottom-right",
@@ -331,7 +331,7 @@ function App() {
                 )
                 .map((item, index) => (
                   <tr className="table-row" key={index}>
-                    <td style={{ width: "70%" }}>
+                    <td style={{ width: "60%" }}>
                       {" "}
                       {item.keyword
                         ?.toLowerCase()
