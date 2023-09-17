@@ -1,0 +1,27 @@
+/* Modal header styles */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 15px;
+}
+
+.modal-title {
+  font-size: 1.25rem;
+}
+
+/* Modal body styles */
+.modal-body {
+  padding: 10px 0;
+}
+
+/* Modal form styles */
+.form-label {
+  font-weight: bold;
+}
+
+#edit-btn {
+  margin-right: 2%;
+}
