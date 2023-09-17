@@ -7,11 +7,17 @@ import {
   addDoc,
   doc,
   updateDoc,
+  deleteDoc,
 } from "firebase/firestore";
 import app from "./firebase";
 import logo from "./images/logo.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCopy, faLink, faEdit } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCopy,
+  faLink,
+  faEdit,
+  faRemove,
+} from "@fortawesome/free-solid-svg-icons";
 import copy from "copy-to-clipboard";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -162,6 +168,37 @@ function App() {
       console.error("Error updating document: ", error);
     }
     setIsEditBlogModalOpen(false);
+  };
+
+  const handleDeleteBlog = (blog) => {
+    setSelectedBlog(blog);
+    deleteBlog(blog);
+  };
+
+  const deleteBlog = async (selectedBlog) => {
+    try {
+      const blogRef = doc(db, "articles", selectedBlog.articleId);
+      await deleteDoc(blogRef);
+
+      // Remove the deleted blog from the local state (blogs array)
+      setBlogs((prevBlogs) =>
+        prevBlogs.filter((blog) => blog.articleId !== selectedBlog.articleId)
+      );
+      selectedBlog(null);
+
+      toast("🗑️ Blog entry deleted!", {
+        position: "bottom-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    } catch (error) {
+      console.error("Error deleting document: ", error);
+    }
   };
 
   useEffect(() => {
@@ -332,6 +369,19 @@ function App() {
                             onClick={() => handleEditBlog(item)}
                           >
                             <FontAwesomeIcon icon={faEdit} id="icon" />
+                          </button>
+                        </td>
+                        <td className="other" style={{ borderRight: 0 }}>
+                          <button
+                            type="button"
+                            className="btn"
+                            onClick={() => handleDeleteBlog(item)}
+                          >
+                            <FontAwesomeIcon
+                              icon={faRemove}
+                              id="icon"
+                              color="red"
+                            />
                           </button>
                         </td>
                       </>

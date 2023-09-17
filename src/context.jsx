@@ -9,6 +9,9 @@ import { auth } from "./firebase";
 const userAuthContext = createContext();
 
 export function UserAuthContextProvider({ children }) {
+  // INCORRECT: const [user, setUser] = useState({}); ({} is not null)
+
+  // CORRECTED: pass null instaed or empty object
   const [user, setUser] = useState(null);
 
   function logIn(email, password) {
