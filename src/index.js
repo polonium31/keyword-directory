@@ -11,8 +11,7 @@ root.render(
     <UserAuthContextProvider>
       <App />
     </UserAuthContextProvider>
-  </React.StrictMode>,
-  document.getElementById("root")
+  </React.StrictMode>
 );
 
 reportWebVitals();

@@ -16,13 +16,14 @@ import {
   faCopy,
   faLink,
   faEdit,
-  faRemove,
+  faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import copy from "copy-to-clipboard";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import LoginModal from "./modals/LoginModal";
 import EditBlogModal from "./modals/EditBlogModal";
+import DeleteBlogModal from "./modals/DeleteBlogModal";
 import { useUserAuth } from "./context";
 
 function App() {
@@ -33,6 +34,7 @@ function App() {
   const [userLoggedIn, setUserLoggedIn] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isEditBlogModalOpen, setIsEditBlogModalOpen] = useState(false);
+  const [isDeleteBlogModalOpen, setIsDeleteBlogModalOpen] = useState(false);
   const [selectedBlog, setSelectedBlog] = useState(null);
   const db = getFirestore(app);
   const { user, logIn, logOut } = useUserAuth();
@@ -106,17 +108,31 @@ function App() {
     }
 
     // Check if the blog already exists based on link or keyword
-    const isBlogAlreadyExists = blogs.some(
+    const existingBlog = blogs.find(
       (blog) =>
         blog.link === newBlog.link ||
         blog.keyword.toLowerCase() === newBlog.keyword.toLowerCase()
     );
 
-    if (isBlogAlreadyExists) {
+    if (existingBlog) {
+      // If a blog with the same keyword or link exists
       setNewBlog({ keyword: "", link: "" });
-      alert("This blog is already present in the directory.");
+      const message =
+        existingBlog.link === newBlog.link
+          ? `This blog is already present in the directory with the same link.`
+          : `A blog with the same keyword "${existingBlog.keyword}" already exists in the directory.`;
 
       setSearchQuery(newBlog.keyword);
+      toast(message, {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
       return;
     }
 
@@ -172,7 +188,7 @@ function App() {
 
   const handleDeleteBlog = (blog) => {
     setSelectedBlog(blog);
-    deleteBlog(blog);
+    setIsDeleteBlogModalOpen(true);
   };
 
   const deleteBlog = async (selectedBlog) => {
@@ -199,6 +215,7 @@ function App() {
     } catch (error) {
       console.error("Error deleting document: ", error);
     }
+    setIsDeleteBlogModalOpen(false);
   };
 
   useEffect(() => {
@@ -370,15 +387,14 @@ function App() {
                           >
                             <FontAwesomeIcon icon={faEdit} id="icon" />
                           </button>
-                        </td>
-                        <td className="other" style={{ borderRight: 0 }}>
+
                           <button
                             type="button"
                             className="btn"
                             onClick={() => handleDeleteBlog(item)}
                           >
                             <FontAwesomeIcon
-                              icon={faRemove}
+                              icon={faTrash}
                               id="icon"
                               color="red"
                             />
@@ -408,9 +424,23 @@ function App() {
       {selectedBlog && (
         <EditBlogModal
           isOpen={isEditBlogModalOpen}
-          onRequestClose={() => setIsEditBlogModalOpen(false)}
+          onRequestClose={() => {
+            setIsEditBlogModalOpen(false);
+            setSelectedBlog(null);
+          }}
           blog={selectedBlog}
           onEdit={saveEditedBlog}
+        />
+      )}
+      {selectedBlog && (
+        <DeleteBlogModal
+          isOpen={isDeleteBlogModalOpen}
+          onRequestClose={() => {
+            setIsDeleteBlogModalOpen(false);
+            setSelectedBlog(null);
+          }}
+          blog={selectedBlog}
+          onDelete={deleteBlog}
         />
       )}
     </>
