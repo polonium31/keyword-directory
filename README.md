@@ -1,70 +1,75 @@
-# Getting Started with Create React App
+# Keyword-Targeted Article Directory
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Project Description
 
-## Available Scripts
+The Keyword-Targeted Article Directory is a web-based application designed to organize and manage articles based on specific keywords. It provides a user-friendly interface with different features for both users and administrators. This project aims to help users easily search for and access articles associated with specific keywords, while administrators have additional capabilities to manage the content.
 
-In the project directory, you can run:
+## Hosted Project link
 
-### `npm start`
+Open [LTkeyword Directory](https://ltkeyword.netlify.app/) to view it in your browser.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Features
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+#### User Features
 
-### `npm test`
+1. **Search:** Users can search for articles by entering keywords. The system will display a list of articles related to the entered keyword.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+2. **Copy:** Users can copy the content of an article to their clipboard for easy reference.
 
-### `npm run build`
+#### Admin Features
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. **Search:** Administrators can search for articles by keywords, just like users.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+2. **Edit:** Administrators have the ability to edit articles. This can be useful for correcting errors, updating information, or making improvements to the content.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+3. **Delete:** Administrators can delete articles that are no longer relevant or need to be removed for any reason.
 
-### `npm run eject`
+4. **Copy:** Administrators, like users, can copy the content of an article to their clipboard.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### How It Works
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+1. **User Access:** Users can access the system and perform searches using keywords.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+2. **Admin Access:** Administrators have a separate login and can access the system with enhanced privileges.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+3. **Keyword-Targeted Articles:** Each keyword is associated with a specific article. When a user searches for a keyword, the system retrieves the corresponding article.
 
-## Learn More
+4. **Editing and Deletion:** Administrators can make changes to articles or delete them as needed.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+5. **Copy Functionality:** Both users and administrators can easily copy the content of an article for their use.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Getting Started
 
-### Code Splitting
+To use this application, follow these steps:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+1. **User Access:**
 
-### Analyzing the Bundle Size
+   - Access the application through the provided URL.
+   - Enter a keyword in the search bar.
+   - View and copy the article content.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+2. **Admin Access:**
+   - Log in with administrator credentials.
+   - Search for articles using keywords.
+   - Edit or delete articles as necessary.
+   - Copy article content.
 
-### Making a Progressive Web App
+### Technologies Used
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+- React v18
+- Firebase 9
 
-### Advanced Configuration
+## Contributors
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+Thanks to these wonderful people who have contributed to this project:
 
-### Deployment
+| [<img src="https://avatars.githubusercontent.com/u/68313150?v=4" width="100px;"/><br /><sub><b>Tanay Kumar deo</b></sub>](https://github.com/tanay388) | [<img src="https://avatars.githubusercontent.com/u/65034584?v=4" width="100px;"/><br /><sub><b>Jainish Patel</b></sub>](https://github.com/polonium31) |
+| :----------------------------------------------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------------------: |
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+<!-- ALL-CONTRIBUTORS-LIST:END -->
 
-### `npm run build` fails to minify
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)
+
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
