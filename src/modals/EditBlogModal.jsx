@@ -49,7 +49,7 @@ const EditBlogModal = ({ isOpen, onRequestClose, blog, onEdit }) => {
               Article Link:
             </label>
             <input
-              type="text"
+              type="url"
               className="form-control"
               id="editLink"
               placeholder="Enter article link"

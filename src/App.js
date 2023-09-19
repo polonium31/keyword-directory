@@ -30,12 +30,15 @@ function App() {
   const [blogs, setBlogs] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [articlesFound, setArticlesFound] = useState(true);
+  const [showList, setShowList] = useState(false);
   const [newBlog, setNewBlog] = useState({ keyword: "", link: "" });
   const [userLoggedIn, setUserLoggedIn] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isEditBlogModalOpen, setIsEditBlogModalOpen] = useState(false);
   const [isDeleteBlogModalOpen, setIsDeleteBlogModalOpen] = useState(false);
   const [selectedBlog, setSelectedBlog] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
   const db = getFirestore(app);
   const { user, logIn, logOut } = useUserAuth();
 
@@ -82,6 +85,15 @@ function App() {
     setIsLoginModalOpen(false);
   };
 
+  const toggleList = () => {
+    setShowList(!showList);
+    setSearchQuery("");
+    var getValue = document.getElementById("basic-url");
+    if (getValue.value !== "") {
+      getValue.value = "";
+    }
+  };
+
   const handleLogin = async (email, password) => {
     try {
       await logIn(email, password);
@@ -107,7 +119,6 @@ function App() {
       return;
     }
 
-    // Check if the blog already exists based on link or keyword
     const existingBlog = blogs.find(
       (blog) =>
         blog.link === newBlog.link ||
@@ -115,7 +126,6 @@ function App() {
     );
 
     if (existingBlog) {
-      // If a blog with the same keyword or link exists
       setNewBlog({ keyword: "", link: "" });
       const message =
         existingBlog.link === newBlog.link
@@ -151,6 +161,16 @@ function App() {
       ]);
 
       setNewBlog({ keyword: "", link: "" });
+      toast("🥳 New Blog Added!!", {
+        position: "bottom-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
     } catch (error) {
       console.error("Error adding document: ", error);
     }
@@ -224,8 +244,9 @@ function App() {
 
   useEffect(() => {
     const filteredArticles = [...blogs].filter((item) =>
-      item.keyword?.toLowerCase().includes(searchQuery?.toLowerCase())
+      item.keyword?.toLowerCase().includes(searchQuery.toLowerCase())
     );
+
     setArticlesFound(filteredArticles.length > 0);
   }, [blogs, searchQuery]);
 
@@ -234,12 +255,34 @@ function App() {
       setUserLoggedIn(true);
     }
   }, [user]);
+  const sortedBlogs = [...blogs].sort((a, b) =>
+    a.keyword?.toLowerCase() > b.keyword?.toLowerCase() ? 1 : -1
+  );
+  // Pagination
+  const indexOfLastBlog = currentPage * itemsPerPage;
+  const indexOfFirstBlog = indexOfLastBlog - itemsPerPage;
+  const currentBlogs = sortedBlogs.slice(indexOfFirstBlog, indexOfLastBlog);
 
+  // Function to handle the next page
+  const nextPage = () => {
+    if (currentPage < Math.ceil(sortedBlogs.length / itemsPerPage)) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  // Function to handle the previous page
+  const prevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
   return (
     <>
       <nav className="navbar bg-body-tertiary">
         <div className="container-fluid">
-          <img src={logo} className="navbar-brand" width="200" alt="Logo" />
+          <a href="/" className="navbar-brand">
+            <img src={logo} width="200" alt="Logo" />
+          </a>
           <div className="navbar-text">
             <h3 style={{ marginRight: "10px", color: "#000000" }}>
               Keyword Directory
@@ -282,6 +325,7 @@ function App() {
                 name="search"
                 onChange={(e) => {
                   setSearchQuery(e.target.value);
+                  setShowList(false);
                 }}
               />
             </div>
@@ -302,7 +346,7 @@ function App() {
             </div>
             <div className="col-5">
               <input
-                type="text"
+                type="url"
                 className="form-control"
                 placeholder="Article Link"
                 value={newBlog.link}
@@ -415,6 +459,132 @@ function App() {
       <div>
         <ToastContainer />
       </div>
+      {/* Key Glossary button */}
+      <div className="text-center mt-4">
+        <button
+          type="button"
+          className="btn btn-outline-primary"
+          onClick={toggleList}
+          style={{ fontWeight: "bold", marginBottom: "2%" }}
+        >
+          {showList ? "Hide List" : "Key Glossary"}
+        </button>
+      </div>
+      {/* Conditionally render the list of blogs */}
+      {showList && (
+        <div className="container p-2">
+          <table className="table">
+            <thead>
+              <tr>
+                <th>Keyword</th>
+                <th>Article Link</th>
+                <th>Copy Link</th>
+                {userLoggedIn && <th>Actions</th>}
+              </tr>
+            </thead>
+            <tbody>
+              {currentBlogs.map((item, index) => (
+                <tr className="table-row" key={index}>
+                  <td style={{ width: "60%" }}>
+                    {item.keyword
+                      ?.toLowerCase()
+                      .split(" ")
+                      .map(
+                        (word) => word.charAt(0).toUpperCase() + word.slice(1)
+                      )
+                      .join(" ")}
+                  </td>
+                  <td className="other">
+                    <a
+                      href={item.link}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="link"
+                    >
+                      <FontAwesomeIcon icon={faLink} /> Link
+                    </a>
+                  </td>
+                  <td className="other">
+                    <button
+                      type="button"
+                      className="btn"
+                      onClick={() => copyToClipboard(item.link)}
+                    >
+                      <FontAwesomeIcon icon={faCopy} id="icon" />
+                    </button>
+                  </td>
+                  {userLoggedIn && (
+                    <>
+                      <td className="other" style={{ borderRight: 0 }}>
+                        <button
+                          type="button"
+                          className="btn"
+                          onClick={() => handleEditBlog(item)}
+                        >
+                          <FontAwesomeIcon icon={faEdit} id="icon" />
+                        </button>
+
+                        <button
+                          type="button"
+                          className="btn"
+                          onClick={() => handleDeleteBlog(item)}
+                        >
+                          <FontAwesomeIcon
+                            icon={faTrash}
+                            id="icon"
+                            color="red"
+                          />
+                        </button>
+                      </td>
+                    </>
+                  )}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          {/* Pagination */}
+          <nav>
+            <ul className="pagination justify-content-center">
+              <li
+                className={`page-item ${currentPage === 1 ? "disabled" : ""}`}
+              >
+                <button className="page-link" onClick={prevPage}>
+                  &laquo; Prev
+                </button>
+              </li>
+              {Array(Math.ceil(sortedBlogs.length / itemsPerPage))
+                .fill()
+                .map((_, index) => (
+                  <li
+                    key={index}
+                    className={`page-item ${
+                      currentPage === index + 1 ? "active" : ""
+                    }`}
+                  >
+                    <button
+                      className="page-link"
+                      onClick={() => setCurrentPage(index + 1)}
+                    >
+                      {index + 1}
+                    </button>
+                  </li>
+                ))}
+              <li
+                className={`page-item ${
+                  currentPage === Math.ceil(sortedBlogs.length / itemsPerPage)
+                    ? "disabled"
+                    : ""
+                }`}
+              >
+                <button className="page-link" onClick={nextPage}>
+                  Next &raquo;
+                </button>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      )}
       <LoginModal
         isOpen={isLoginModalOpen}
         onRequestClose={closeLoginModal}
